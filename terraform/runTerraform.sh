@@ -7,6 +7,9 @@ SRC_DIR="$(cd "${SCRIPT_DIR}"; pwd -P)"
 ENVIRONMENT_TFVARS="${SRC_DIR}/settings/environment.tfvars"
 
 CLUSTER_NAME=$(grep -E "^cluster_name" "${ENVIRONMENT_TFVARS}" | sed -E "s/^cluster_name=\"(.*)\".*/\1/g")
+RESOURCE_GROUP_NAME=$(grep -E "^resource_group_name" "${ENVIRONMENT_TFVARS}" | sed -E "s/^resource_group_name=\"(.*)\".*/\1/g")
+NAME_PREFIX=$(grep -E "^name_prefix" "${ENVIRONMENT_TFVARS}" | sed -E "s/^name_prefix=\"(.*)\".*/\1/g")
+
 if [[ -z "${CLUSTER_NAME}" ]]; then
   if [[ -n "${NAME_PREFIX}" ]]; then
     CLUSTER_NAME="${NAME_PREFIX}-cluster"
@@ -29,9 +32,6 @@ cp "${SRC_DIR}"/scripts/* "${WORKSPACE_DIR}"
 
 # Read terraform.tfvars to see if cluster_exists, postgres_server_exists, and cluster_type are set
 # If not, get them from the user and write them to a file
-
-RESOURCE_GROUP_NAME=$(grep -E "^resource_group_name" "${TFVARS}" | sed -E "s/^resource_group_name=\"(.*)\".*/\1/g")
-NAME_PREFIX=$(grep -E "^name_prefix" "${TFVARS}" | sed -E "s/^name_prefix=\"(.*)\".*/\1/g")
 
 CLUSTER_MANAGEMENT="ibmcloud"
 
